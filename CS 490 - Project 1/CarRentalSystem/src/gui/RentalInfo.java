@@ -9,6 +9,7 @@ import business_logic.Controller;
 import carrentalsystem.Customer;
 import carrentalsystem.Rental;
 import java.util.LinkedList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -307,9 +308,19 @@ public class RentalInfo extends javax.swing.JFrame {
     private void rentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rentButtonActionPerformed
 
         int totalRows = rentCarTable.getRowCount();
-        for (int row=0; row < totalRows; row++) {
+        for (int row=totalRows - 1; row >= 0; row--) {
             if ((Boolean)rentCarTable.getValueAt(row, 0)) {
-                controller.addRental((String)rentCarTable.getValueAt(row, 1), customerName);
+                String carID = (String)rentCarTable.getValueAt(row, 1);
+                boolean success = controller.addRental(carID, customerName);
+                if (success) {
+                    ((DefaultTableModel)rentCarTable.getModel()).removeRow(row);
+                }
+                else {
+                    JOptionPane.showMessageDialog(null,
+                            "Car with id: " + carID + " is not Available",
+                            "Invalid Rental",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_rentButtonActionPerformed
@@ -325,9 +336,10 @@ public class RentalInfo extends javax.swing.JFrame {
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
         int totalRows = rentedCarsTable.getRowCount();
-        for (int row=0; row < totalRows; row++) {
+        for (int row=totalRows-1; row >= 0; row--) {
             if ((Boolean)rentedCarsTable.getValueAt(row, 0)) {
                 controller.addReturn((String)rentedCarsTable.getValueAt(row, 1), customerName);
+                ((DefaultTableModel)rentedCarsTable.getModel()).removeRow(row);
             }
         }
     }//GEN-LAST:event_returnButtonActionPerformed

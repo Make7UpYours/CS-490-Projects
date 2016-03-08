@@ -42,15 +42,25 @@ public class Controller {
         cars.add(car);
     }
     
-    public void addRental(String carID, String customerName) {
+    public boolean addRental(String carID, String customerName) {
         Car car = findCar(carID);
-        Rental rental = new Rental(car, customerName);
-        rentals.add(rental);
+        //Can only rent a car if it is available
+        if(car.isAvailable()){
+            car.toggleAvailability();
+            Rental rental = new Rental(car, customerName);
+            rentals.add(rental);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     
     public void addReturn(String carID, String customerName) {
         for(Rental rental : rentals) {
-            if(rental.getCustomerName().equals(customerName) && rental.getCar().getID().equals(carID)){
+            Car car = rental.getCar();
+            if(rental.getCustomerName().equals(customerName) && car.getID().equals(carID)){
+                car.toggleAvailability();
                 rental.returnCar();
             }
         }
@@ -92,8 +102,11 @@ public class Controller {
     public LinkedList<String[]> searchCars(String text){
         LinkedList<String[]> result = new LinkedList<String[]>();
         for(Searchable car:cars){
-            if(car.contains(text))
-                result.add(car.info());
+            if(car.contains(text)) {
+                if (((Car)car).isAvailable()) {
+                    result.add(car.info());
+                }
+            }
         }
         return result;
     }
