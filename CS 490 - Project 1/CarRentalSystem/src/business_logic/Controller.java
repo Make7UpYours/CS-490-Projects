@@ -22,6 +22,7 @@ public class Controller {
     private Controller(){
         customers = new LinkedList<Customer>();
         cars = new LinkedList<Car>();
+        rentals = new LinkedList<Rental>();
     }
     
     public static Controller instance(){
@@ -42,19 +43,39 @@ public class Controller {
     }
     
     public void addRental(String carID, String customerName) {
-        Rental rental = new Rental(carID, customerName);
+        Car car = findCar(carID);
+        Rental rental = new Rental(car, customerName);
         rentals.add(rental);
-        System.out.println(rental.getCarID());
-        System.out.println(rental.getCustomerName());
-        System.out.println(rental.getRentDate());
     }
     
-    public LinkedList<String[]> searchRentedCars(String customerName){
+    public void addReturn(String carID, String customerName) {
+        for(Rental rental : rentals) {
+            if(rental.getCustomerName().equals(customerName) && rental.getCar().getID().equals(carID)){
+                rental.returnCar();
+            }
+        }
+    }
+    
+    public LinkedList<String[]> findCustomerRentedCars(String customerName){
         LinkedList<String[]> result = new LinkedList<String[]>();
         for(Rental rental : rentals){
-            if(rental.getStatus().equals("Rented")){
-                result.add(searchCars(rental.getCarID()));
-                }
+            if(rental.getCustomerName().equals(customerName) && rental.getStatus() == RentalStatus.RENTED){
+                // creates single array of format: 
+                // { carID, carMake, carModel, carYear, carSize, rentalRentDate, rentalReturnDate, rentalStatus }
+                result.add(concat(rental.getCar().info(), rental.info()));
+            }
+        }
+        return result;
+    }
+    
+    public LinkedList<String[]> findCustomerReturnedCars(String customerName){
+        LinkedList<String[]> result = new LinkedList<String[]>();
+        for(Rental rental : rentals){
+            if(rental.getCustomerName().equals(customerName) && rental.getStatus() == RentalStatus.RETURNED){
+                 // creates single array of format: 
+                // { carID, carMake, carModel, carYear, carSize, rentalRentDate, rentalReturnDate, rentalStatus }
+                result.add(concat(rental.getCar().info(), rental.info()));
+            }
         }
         return result;
     }
@@ -74,6 +95,24 @@ public class Controller {
             if(car.contains(text))
                 result.add(car.info());
         }
+        return result;
+    }
+    
+    private Car findCar(String carID) {
+        for (Car car : cars) {
+            if (car.getID().equals(carID)) {
+                return car;
+            }
+        }
+        return null;
+    }
+    
+    private String[] concat(String[] a, String[] b) {
+        int aLen = a.length;
+        int bLen = b.length;
+        String[] result = new String[aLen + bLen];
+        System.arraycopy(a, 0, result, 0, aLen);
+        System.arraycopy(b, 0, result, aLen, bLen);
         return result;
     }
 }

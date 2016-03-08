@@ -17,21 +17,17 @@ import javax.swing.table.DefaultTableModel;
  */
 public class RentalInfo extends javax.swing.JFrame {
     private Controller controller;
+    private String customerName;
     /**
      * Creates new form RentalInfo
      */
     public RentalInfo(String custName, int tabNum) {
         controller = Controller.instance();
+        customerName = custName;
         initComponents();
         jTabbedPane1.setSelectedIndex(tabNum);
         customerNameText.setText(custName);
         
-        DefaultTableModel rentedCarsModel = (DefaultTableModel) rentedCarsTable.getModel();
-        rentedCarsModel.setNumRows(0);
-        LinkedList<String[]> rentedCars = controller.searchRentedCars());
-        for(String[] customer:customers){
-            custModel.addRow(customer);
-        }
     }
 
     /**
@@ -144,19 +140,29 @@ public class RentalInfo extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Find Car", findCarPanel);
 
+        rentedCarsPanel.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                rentedCarsPanelAncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+
         rentedCarsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Select", "Make", "Model", "Year", "Rented"
+                "Select", "ID", "Make", "Model", "Year", "Rented"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
+                java.lang.Boolean.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                true, false, false, false, false
+                true, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -170,6 +176,11 @@ public class RentalInfo extends javax.swing.JFrame {
         jScrollPane2.setViewportView(rentedCarsTable);
 
         returnButton.setText("Return Selected");
+        returnButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                returnButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout rentedCarsPanelLayout = new javax.swing.GroupLayout(rentedCarsPanel);
         rentedCarsPanel.setLayout(rentedCarsPanelLayout);
@@ -195,6 +206,16 @@ public class RentalInfo extends javax.swing.JFrame {
         );
 
         jTabbedPane1.addTab("Rented Cars", rentedCarsPanel);
+
+        returnedCarsPanel.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                returnedCarsPanelAncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
 
         returnedCarsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -288,10 +309,38 @@ public class RentalInfo extends javax.swing.JFrame {
         int totalRows = rentCarTable.getRowCount();
         for (int row=0; row < totalRows; row++) {
             if ((Boolean)rentCarTable.getValueAt(row, 0)) {
-                controller.addRental((String)rentCarTable.getValueAt(row, 1), customerNameText.getText());
+                controller.addRental((String)rentCarTable.getValueAt(row, 1), customerName);
             }
         }
     }//GEN-LAST:event_rentButtonActionPerformed
+
+    private void rentedCarsPanelAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_rentedCarsPanelAncestorAdded
+        DefaultTableModel rentedCarsModel = (DefaultTableModel) rentedCarsTable.getModel();
+        rentedCarsModel.setNumRows(0);
+        LinkedList<String[]> rentedCars = controller.findCustomerRentedCars(customerName);
+         for(String[] car : rentedCars){
+            rentedCarsModel.addRow(new Object[]{ false, car[0], car[1], car[2], car[3], car[5] });
+        }
+    }//GEN-LAST:event_rentedCarsPanelAncestorAdded
+
+    private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
+        int totalRows = rentedCarsTable.getRowCount();
+        for (int row=0; row < totalRows; row++) {
+            if ((Boolean)rentedCarsTable.getValueAt(row, 0)) {
+                controller.addReturn((String)rentedCarsTable.getValueAt(row, 1), customerName);
+            }
+        }
+    }//GEN-LAST:event_returnButtonActionPerformed
+
+    private void returnedCarsPanelAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_returnedCarsPanelAncestorAdded
+        DefaultTableModel returnedCarsModel = (DefaultTableModel) returnedCarsTable.getModel();
+        returnedCarsModel.setNumRows(0);
+        LinkedList<String[]> returnedCars = controller.findCustomerReturnedCars(customerName);
+         for(String[] car : returnedCars){
+            returnedCarsModel.addRow(new Object[]{ car[0], car[1], car[2], car[3], 
+                car[5], car[6] });
+        }
+    }//GEN-LAST:event_returnedCarsPanelAncestorAdded
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountText;

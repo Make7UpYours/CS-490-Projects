@@ -17,22 +17,18 @@ public class Rental {
     private Calendar rentDate;
     private Calendar returnDate;
     private RentalStatus status;
-    private String carID;
+    private Car car;
     private String customerName;
 
-    public Rental(String carID, String customerName) {
+    public Rental(Car car, String customerName) {
         this.rentDate = Calendar.getInstance();
         this.status = RentalStatus.RENTED;
-        this.carID = carID;
+        this.car = car;
         this.customerName = customerName;
     }
 
-    public String getCarID() {
-        return carID;
-    }
-
-    public void setCarID(String carID) {
-        this.carID = carID;
+    public Car getCar() {
+        return car;
     }
 
     public String getCustomerName() {
@@ -49,14 +45,15 @@ public class Rental {
         return time;
     }
 
-    public void setRentDate(Calendar rentDate) {
-        this.rentDate = rentDate;
-    }
-
     public String getReturnDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        String time = sdf.format(returnDate.getTime());
-        return time;
+        if (returnDate != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            String time = sdf.format(returnDate.getTime());
+            return time;
+        }
+        else {
+            return "N/A";
+        }
     }
 
     public void setReturnDate(Calendar returnDate) {
@@ -66,9 +63,14 @@ public class Rental {
     public RentalStatus getStatus() {
         return status;
     }
-
-    public void setStatus(RentalStatus status) {
-        this.status = status;
+    
+    public void returnCar() {
+        this.status = RentalStatus.RETURNED;
+        this.returnDate = Calendar.getInstance();
+    }
+    
+    public String[] info() {
+        return new String[]{ this.getRentDate(), this.getReturnDate(), this.status.toString() };
     }
     
 }

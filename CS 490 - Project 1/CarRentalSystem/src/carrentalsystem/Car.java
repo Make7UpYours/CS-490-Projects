@@ -48,4 +48,8 @@ public class Car implements Searchable{
             Integer.toString(this.spec.getYear()), this.spec.getSize().toString()};
     }
     
+    public String getID() {
+        return ID;
+    }
+    
 }
