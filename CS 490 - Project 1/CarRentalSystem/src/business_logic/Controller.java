@@ -15,6 +15,7 @@ import java.util.LinkedList;
 public class Controller {
     private LinkedList<Customer> customers;
     private LinkedList<Car> cars;
+    private LinkedList<Rental> rentals;
     
     private static Controller singleton;
     
@@ -38,6 +39,24 @@ public class Controller {
     public void addCar(String ID, CarSpec spec){
         Car car = new Car(ID, spec);
         cars.add(car);
+    }
+    
+    public void addRental(String carID, String customerName) {
+        Rental rental = new Rental(carID, customerName);
+        rentals.add(rental);
+        System.out.println(rental.getCarID());
+        System.out.println(rental.getCustomerName());
+        System.out.println(rental.getRentDate());
+    }
+    
+    public LinkedList<String[]> searchRentedCars(String customerName){
+        LinkedList<String[]> result = new LinkedList<String[]>();
+        for(Rental rental : rentals){
+            if(rental.getStatus().equals("Rented")){
+                result.add(searchCars(rental.getCarID()));
+                }
+        }
+        return result;
     }
     
     public LinkedList<String[]> searchCustomers(String text){

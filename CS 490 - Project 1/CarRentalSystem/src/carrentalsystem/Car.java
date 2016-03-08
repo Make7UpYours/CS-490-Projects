@@ -14,10 +14,25 @@ import business_logic.Searchable;
 public class Car implements Searchable{
     private String ID;
     private CarSpec spec;
+    private boolean available;
     
     public Car(String ID, CarSpec spec){
         this.ID = ID;
         this.spec = spec;
+        this.available = true;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void toggleAvailability() {
+        if (available) {
+            available = false;
+        }
+        else {
+            available = true;
+        }
     }
     
     @Override

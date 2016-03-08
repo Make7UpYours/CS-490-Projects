@@ -6,6 +6,8 @@
 package gui;
 
 import business_logic.Controller;
+import carrentalsystem.Customer;
+import carrentalsystem.Rental;
 import java.util.LinkedList;
 import javax.swing.table.DefaultTableModel;
 
@@ -18,10 +20,18 @@ public class RentalInfo extends javax.swing.JFrame {
     /**
      * Creates new form RentalInfo
      */
-    public RentalInfo(String custName) {
+    public RentalInfo(String custName, int tabNum) {
         controller = Controller.instance();
         initComponents();
+        jTabbedPane1.setSelectedIndex(tabNum);
         customerNameText.setText(custName);
+        
+        DefaultTableModel rentedCarsModel = (DefaultTableModel) rentedCarsTable.getModel();
+        rentedCarsModel.setNumRows(0);
+        LinkedList<String[]> rentedCars = controller.searchRentedCars());
+        for(String[] customer:customers){
+            custModel.addRow(customer);
+        }
     }
 
     /**
@@ -69,6 +79,11 @@ public class RentalInfo extends javax.swing.JFrame {
         });
 
         rentButton.setText("Rent Selected");
+        rentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rentButtonActionPerformed(evt);
+            }
+        });
 
         rentCarTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -267,6 +282,16 @@ public class RentalInfo extends javax.swing.JFrame {
                 car[4]});
         }
     }//GEN-LAST:event_searchButtonActionPerformed
+
+    private void rentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rentButtonActionPerformed
+
+        int totalRows = rentCarTable.getRowCount();
+        for (int row=0; row < totalRows; row++) {
+            if ((Boolean)rentCarTable.getValueAt(row, 0)) {
+                controller.addRental((String)rentCarTable.getValueAt(row, 1), customerNameText.getText());
+            }
+        }
+    }//GEN-LAST:event_rentButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountText;

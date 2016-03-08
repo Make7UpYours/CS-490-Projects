@@ -6,6 +6,7 @@
 package carrentalsystem;
 
 import business_logic.*;
+import java.util.List;
 
 /**
  *
@@ -15,6 +16,7 @@ public class Customer implements Searchable {
     private String name;
     private String phone;
     private String address;
+    private List<Rental> rentedCars;
     
     public Customer(String name, String phone, String address){
         this.name = name;

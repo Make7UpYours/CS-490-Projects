@@ -123,6 +123,11 @@ public class CustomerSearch extends javax.swing.JFrame {
         });
 
         rentedCarsButton.setText("Rented Cars");
+        rentedCarsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rentedCarsButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -182,10 +187,25 @@ public class CustomerSearch extends javax.swing.JFrame {
         }
         
         String name = (String)customerTable.getValueAt(row, 0);
-        RentalInfo rentalFrame = new RentalInfo(name);
+        RentalInfo rentalFrame = new RentalInfo(name, 0);
         rentalFrame.setVisible(true);
     }//GEN-LAST:event_rentCarButtonActionPerformed
 
+    private void rentedCarsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rentedCarsButtonActionPerformed
+        int row = customerTable.getSelectedRow();
+        // Ensure the user selects a customer from the table.
+        if(row == -1){
+            createMsgBox("No Customer Selected");
+            return;
+        }
+        
+        String name = (String)customerTable.getValueAt(row, 0);
+        RentalInfo rentalFrame = new RentalInfo(name, 1);
+        rentalFrame.setVisible(true);
+    }//GEN-LAST:event_rentedCarsButtonActionPerformed
+    
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable customerTable;
     private javax.swing.JButton rentCarButton;
