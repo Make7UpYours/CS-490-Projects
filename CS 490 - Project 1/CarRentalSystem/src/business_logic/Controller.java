@@ -43,6 +43,7 @@ public class Controller {
     }
     
     public boolean addRental(String carID, String customerName) {
+        // rent a car and change its status to unavailable
         Car car = findCar(carID);
         //Can only rent a car if it is available
         if(car.isAvailable()){
@@ -57,6 +58,7 @@ public class Controller {
     }
     
     public void addReturn(String carID, String customerName) {
+        // Return a car and change its status to available
         for(Rental rental : rentals) {
             Car car = rental.getCar();
             if(rental.getCustomerName().equals(customerName) && car.getID().equals(carID)){
@@ -67,6 +69,7 @@ public class Controller {
     }
     
     public LinkedList<String[]> findCustomerRentedCars(String customerName){
+        // Retrieve a customer's list of rented cars
         LinkedList<String[]> result = new LinkedList<String[]>();
         for(Rental rental : rentals){
             if(rental.getCustomerName().equals(customerName) && rental.getStatus() == RentalStatus.RENTED){
@@ -79,6 +82,7 @@ public class Controller {
     }
     
     public LinkedList<String[]> findCustomerReturnedCars(String customerName){
+        // Retrieve a customer's  list of returned cars
         LinkedList<String[]> result = new LinkedList<String[]>();
         for(Rental rental : rentals){
             if(rental.getCustomerName().equals(customerName) && rental.getStatus() == RentalStatus.RETURNED){
@@ -91,6 +95,7 @@ public class Controller {
     }
     
     public LinkedList<String[]> searchCustomers(String text){
+        // Search all customers by text input
         LinkedList<String[]> result = new LinkedList<String[]>();
         for(Searchable customer:customers){
             if(customer.contains(text))
@@ -100,6 +105,7 @@ public class Controller {
     }
     
     public LinkedList<String[]> searchCars(String text){
+        // Search all available cars by text input
         LinkedList<String[]> result = new LinkedList<String[]>();
         for(Searchable car:cars){
             if(car.contains(text)) {
@@ -112,6 +118,7 @@ public class Controller {
     }
     
     private Car findCar(String carID) {
+        // find a car by ID
         for (Car car : cars) {
             if (car.getID().equals(carID)) {
                 return car;
@@ -121,6 +128,7 @@ public class Controller {
     }
     
     private String[] concat(String[] a, String[] b) {
+        // function for concatenating arrays.  Used to add rental info to car or customer info
         int aLen = a.length;
         int bLen = b.length;
         String[] result = new String[aLen + bLen];

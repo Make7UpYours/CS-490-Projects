@@ -299,6 +299,7 @@ public class RentalInfo extends javax.swing.JFrame {
         DefaultTableModel carModel = (DefaultTableModel) rentCarTable.getModel();
         carModel.setNumRows(0);
         LinkedList<String[]> cars = controller.searchCars(searchTextField.getText());
+        //add car information to table
         for(String[] car:cars){
             carModel.addRow(new Object[]{false, car[0], car[1], car[2], car[3], 
                 car[4]});
@@ -310,12 +311,15 @@ public class RentalInfo extends javax.swing.JFrame {
         int totalRows = rentCarTable.getRowCount();
         for (int row=totalRows - 1; row >= 0; row--) {
             if ((Boolean)rentCarTable.getValueAt(row, 0)) {
+                // only add rentals that are selected by checkbox in the table
                 String carID = (String)rentCarTable.getValueAt(row, 1);
                 boolean success = controller.addRental(carID, customerName);
                 if (success) {
+                    //update the table by removing the newly rented cars
                     ((DefaultTableModel)rentCarTable.getModel()).removeRow(row);
                 }
                 else {
+                    // car was not available.  This should never happen since unavailable cars are not displayed
                     JOptionPane.showMessageDialog(null,
                             "Car with id: " + carID + " is not Available",
                             "Invalid Rental",
@@ -329,6 +333,7 @@ public class RentalInfo extends javax.swing.JFrame {
         DefaultTableModel rentedCarsModel = (DefaultTableModel) rentedCarsTable.getModel();
         rentedCarsModel.setNumRows(0);
         LinkedList<String[]> rentedCars = controller.findCustomerRentedCars(customerName);
+        // add rented car information to table
          for(String[] car : rentedCars){
             rentedCarsModel.addRow(new Object[]{ false, car[0], car[1], car[2], car[3], car[5] });
         }
@@ -338,6 +343,7 @@ public class RentalInfo extends javax.swing.JFrame {
         int totalRows = rentedCarsTable.getRowCount();
         for (int row=totalRows-1; row >= 0; row--) {
             if ((Boolean)rentedCarsTable.getValueAt(row, 0)) {
+                // only add returns that are selected by checkbox in the table
                 controller.addReturn((String)rentedCarsTable.getValueAt(row, 1), customerName);
                 ((DefaultTableModel)rentedCarsTable.getModel()).removeRow(row);
             }
