@@ -12,4 +12,5 @@ package business_logic;
 public interface Searchable {
     public boolean contains(String text);
     public String[] info();
+    public String getID();
 }

@@ -5,11 +5,13 @@
  */
 package movierentalsystem;
 
+import business_logic.Searchable;
+
 /**
  *
  * @author Dan
  */
-public class DVD {
+public class DVD implements Searchable {
     private String serialNo;
     private boolean lost;
     private Movie specs;
@@ -19,8 +21,19 @@ public class DVD {
         this.lost = false;
         this.specs = specs;
     }
-    
+
+    @Override
+    public boolean contains(String text) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String[] info() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public String getID() {
-        return serialNo;
+        return this.serialNo;
     }
 }

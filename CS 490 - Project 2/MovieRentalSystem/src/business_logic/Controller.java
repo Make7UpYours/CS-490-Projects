@@ -1,5 +1,6 @@
 package business_logic;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import movierentalsystem.*;
 
@@ -16,14 +17,16 @@ import movierentalsystem.*;
 public class Controller {
     private static Controller singleton;
     
-    private LinkedList<Customer> customers;
-    private LinkedList<DVD> dvds;
-    private LinkedList<Actor> actors;
+    private ItemList<Customer> customers;
+    private ItemList<DVD> dvds;
+    private ItemList<Actor> actors;
+    private ItemList<Keyword> keywords;
     
     private Controller() {
-        customers = new LinkedList<Customer>();
-        dvds = new LinkedList<DVD>();
-        actors = new LinkedList<Actor>();
+        customers = new ItemList<Customer>();
+        dvds = new ItemList<DVD>();
+        actors = new ItemList<Actor>();
+        keywords = new ItemList<Keyword>();
     }
     
     public static Controller Instance() {
@@ -34,25 +37,31 @@ public class Controller {
     }
     
     public void addDVD(String ID, Movie movie) {
-        dvds.add(new DVD(ID, movie));
+        dvds.addItem(new DVD(ID, movie));
     }
     
     public void addCustomer(String ID, String email, String address, String phone, String pw, String name) {
-        customers.add(new Customer(ID, email, address, phone, pw, name));
+        customers.addItem(new Customer(ID, email, address, phone, pw, name));
     }
     
     public void addActor(String ID, String name, Actor.Gender gender) {
-        Actor actor = new Actor(ID, name, gender);
-        actors.add(actor);
+        actors.addItem(new Actor(ID, name, gender));
     }
     
-    public DVD findDVDbyID(String ID) {
-        for (DVD dvd : dvds) {
-            if (dvd.getID().equals(ID)) {
-                return dvd;
-            }
-        }
-        return null;
+    public void addKeyword(String ID, String name) {
+        keywords.addItem(new Keyword(ID, name));
+    }
+    
+    public Actor findActorByID(String ID) {
+        return actors.findByID(ID);
+    }
+    
+    public Keyword findKeywordByID(String ID) {
+        return keywords.findByID(ID);
+    }
+    
+    public Iterator<DVD> getDVDs() {
+        return dvds.getItems();
     }
     
 }

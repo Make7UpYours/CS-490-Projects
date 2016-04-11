@@ -44,7 +44,7 @@ public class Movie {
             keyword.addMovie(this);
         }
     }
-
+    
     public Rating getRating() {
         return rating;
     }

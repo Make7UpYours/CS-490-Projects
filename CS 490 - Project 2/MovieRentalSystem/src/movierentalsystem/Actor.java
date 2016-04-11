@@ -5,13 +5,14 @@
  */
 package movierentalsystem;
 
+import business_logic.Searchable;
 import java.util.LinkedList;
 
 /**
  *
  * @author Dan
  */
-public class Actor {
+public class Actor implements Searchable {
     public enum Gender{ M, F };
     private String ID;
     private String name;
@@ -27,6 +28,21 @@ public class Actor {
     
     public void addPerformance(Movie movie) {
         performances.add(movie);
+    }
+    
+    @Override
+    public boolean contains(String text) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String[] info() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getID() {
+        return this.ID;
     }
       
 }

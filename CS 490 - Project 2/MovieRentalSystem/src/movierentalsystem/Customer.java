@@ -5,11 +5,13 @@
  */
 package movierentalsystem;
 
+import business_logic.Searchable;
+
 /**
  *
  * @author Dan
  */
-public class Customer {
+public class Customer implements Searchable {
     private String ID;
     private String email;
     private String address;
@@ -24,6 +26,21 @@ public class Customer {
         this.phone = phone;
         this.password = password;
         this.name = name;
+    }
+
+    @Override
+    public boolean contains(String text) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String[] info() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getID() {
+        return this.ID;
     }
     
 }
