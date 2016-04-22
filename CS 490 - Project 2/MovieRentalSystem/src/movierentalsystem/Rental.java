@@ -15,6 +15,7 @@ import java.util.GregorianCalendar;
  * @author Dan
  */
 public class Rental {
+    public final int ONE_WEEK = 7;
     public enum Status{ RETURNED, RENTED };
     private Date rentDate;
     private Date returnDate;
@@ -27,7 +28,7 @@ public class Rental {
         this.status = Status.RENTED;
         this.dvdSerialNo = dvdSerialNo;
         this.customerID = customerID;
-        setReturnDate(7);
+        setReturnDate();
     }
     
     public String getDVDSerialNo() {
@@ -44,10 +45,10 @@ public class Rental {
         return time;
     }
     
-    private void setReturnDate(int noDays) {
+    private void setReturnDate() {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(rentDate);
-        calendar.add(Calendar.DATE, noDays);
+        calendar.add(Calendar.DATE, ONE_WEEK);
         returnDate = calendar.getTime();
     }
     
@@ -72,6 +73,5 @@ public class Rental {
     
     public void returnDVD() {
         this.status = Status.RETURNED;
-        this.returnDate = new Date();
     }
 }
