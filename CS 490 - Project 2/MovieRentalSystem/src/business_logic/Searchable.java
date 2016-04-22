@@ -10,7 +10,7 @@ package business_logic;
  * @author Dan
  */
 public interface Searchable {
+    public boolean matches(String ID);
+    
     public boolean contains(String text);
-    public String[] info();
-    public String getID();
 }

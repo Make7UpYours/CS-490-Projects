@@ -6,6 +6,7 @@
 package movierentalsystem;
 
 import business_logic.Searchable;
+import java.util.LinkedList;
 
 /**
  *
@@ -18,6 +19,7 @@ public class Customer implements Searchable {
     private String phone;
     private String password;
     private String name;
+    private LinkedList<Rental> rentals;
 
     public Customer(String ID, String email, String address, String phone, String password, String name) {
         this.ID = ID;
@@ -26,21 +28,34 @@ public class Customer implements Searchable {
         this.phone = phone;
         this.password = password;
         this.name = name;
+        this.rentals = new LinkedList<>();
     }
-
+    
+    public void addRental(Rental rental) {
+        rentals.add(rental);
+    }
+    
     @Override
     public boolean contains(String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String info = email + " " + address + " " + phone + " " + name;
+        return info.toLowerCase().contains(text.toLowerCase());
     }
 
     @Override
-    public String[] info() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean matches(String ID) {
+        return this.ID.equals(ID);
     }
-
-    @Override
+    
     public String getID() {
         return this.ID;
+    }
+    
+    public String getName() {
+        return this.name;
+    }
+    
+    public LinkedList<Rental> getRentals() {
+        return this.rentals;
     }
     
 }

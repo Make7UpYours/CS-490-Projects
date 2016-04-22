@@ -22,11 +22,21 @@ public class ItemList<T extends Searchable> {
     
     public T findByID(String ID) {
         for (T element : elements) {
-            if (element.getID().equals(ID)) {
+            if (element.matches(ID)) {
                 return element;
             }
         }
         return null;
+    }
+    
+    public Iterator<T> findByContent(String text) {
+        LinkedList<T> results = new LinkedList<T>();
+        for (T element : elements) {
+            if (element.contains(text)) {
+                results.add(element);
+            }
+        }
+        return results.iterator();
     }
     
     public void addItem(T item) {

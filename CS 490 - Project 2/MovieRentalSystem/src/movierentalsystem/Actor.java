@@ -17,32 +17,21 @@ public class Actor implements Searchable {
     private String ID;
     private String name;
     private Gender gender;
-    private LinkedList<Movie> performances;
 
     public Actor(String ID, String name, Gender gender) {
         this.ID = ID;
         this.name = name;
         this.gender = gender;
-        this.performances = new LinkedList<Movie>();
-    }
-    
-    public void addPerformance(Movie movie) {
-        performances.add(movie);
     }
     
     @Override
     public boolean contains(String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.name.toLowerCase().contains(text.toLowerCase());
     }
 
     @Override
-    public String[] info() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getID() {
-        return this.ID;
+    public boolean matches(String ID) {
+        return this.ID.equals(ID);
     }
       
 }

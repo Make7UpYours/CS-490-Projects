@@ -18,13 +18,13 @@ public class Controller {
     private static Controller singleton;
     
     private ItemList<Customer> customers;
-    private ItemList<DVD> dvds;
+    private ItemList<Movie> movies;
     private ItemList<Actor> actors;
     private ItemList<Keyword> keywords;
     
     private Controller() {
         customers = new ItemList<Customer>();
-        dvds = new ItemList<DVD>();
+        movies = new ItemList<Movie>();
         actors = new ItemList<Actor>();
         keywords = new ItemList<Keyword>();
     }
@@ -36,8 +36,8 @@ public class Controller {
         return singleton;
     }
     
-    public void addDVD(String ID, Movie movie) {
-        dvds.addItem(new DVD(ID, movie));
+    public void addMovie(Movie movie) {
+        movies.addItem(movie);
     }
     
     public void addCustomer(String ID, String email, String address, String phone, String pw, String name) {
@@ -60,8 +60,29 @@ public class Controller {
         return keywords.findByID(ID);
     }
     
-    public Iterator<DVD> getDVDs() {
-        return dvds.getItems();
+    public Keyword findDVDByID(String ID) {
+        return keywords.findByID(ID);
     }
     
+    public Customer findCustomerByID(String ID) {
+        return customers.findByID(ID);
+    }
+    
+    public Iterator<Movie> findMovies(String text) {
+        return movies.findByContent(text);
+    }
+    
+    public DVD getAvailableDVD(Movie movie) {
+        return movie.getAvailableDVD();
+    }
+    
+    public boolean makePayment(double amount) {
+        Payment payment = new Payment(amount);
+        return payment.paySuccess();
+    }
+    
+    public void rentMovie(DVD dvd, Customer customer) {
+        dvd.toggleAvailability();
+        customer.addRental(new Rental(dvd.getSerialNo(), customer.getID()));
+    }
 }

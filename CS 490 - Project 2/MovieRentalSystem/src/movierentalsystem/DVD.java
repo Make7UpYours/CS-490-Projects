@@ -15,25 +15,38 @@ public class DVD implements Searchable {
     private String serialNo;
     private boolean lost;
     private Movie specs;
+    private boolean available;
     
     public DVD(String serialNo, Movie specs) {
         this.serialNo = serialNo;
         this.lost = false;
         this.specs = specs;
+        this.available = true;
+    }
+    
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void toggleAvailability() {
+        available = (available) ? false : true;
     }
 
     @Override
     public boolean contains(String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.specs.contains(text);
     }
 
     @Override
-    public String[] info() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean matches(String ID) {
+        return this.serialNo.equals(ID);
     }
-
-    @Override
-    public String getID() {
+    
+    public Movie getMovie() {
+        return this.specs;
+    }
+    
+    public String getSerialNo() {
         return this.serialNo;
     }
 }

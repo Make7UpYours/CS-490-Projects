@@ -15,30 +15,19 @@ import java.util.LinkedList;
 public class Keyword implements Searchable {
     private String ID;
     private String name;
-    private LinkedList<Movie> movies;
     
     public Keyword(String ID, String name) {
         this.ID = ID;
         this.name = name;
-        this.movies = new LinkedList<Movie>();
-    }
-    
-    public void addMovie(Movie movie) {
-        movies.add(movie);
     }
 
     @Override
     public boolean contains(String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.name.toLowerCase().contains(text.toLowerCase());
     }
 
     @Override
-    public String[] info() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getID() {
-        return this.ID;
+    public boolean matches(String ID) {
+        return this.ID.equals(ID);
     }
 }

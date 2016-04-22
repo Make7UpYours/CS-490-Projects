@@ -5,22 +5,73 @@
  */
 package movierentalsystem;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  *
  * @author Dan
  */
 public class Rental {
-    public enum Status{ AVAILABLE, RENTED, NOTSTOCKED };
+    public enum Status{ RETURNED, RENTED };
     private Date rentDate;
     private Date returnDate;
     private Status status;
+    private String dvdSerialNo;
+    private String customerID;
 
-    public Rental(Date rentDate, Date returnDate, Status status) {
-        this.rentDate = rentDate;
-        this.returnDate = returnDate;
-        this.status = status;
+    public Rental(String dvdSerialNo, String customerID) {
+        this.rentDate = new Date();
+        this.status = Status.RENTED;
+        this.dvdSerialNo = dvdSerialNo;
+        this.customerID = customerID;
+        setReturnDate(7);
     }
     
+    public String getDVDSerialNo() {
+        return dvdSerialNo;
+    }
+
+    public String getCustomerID() {
+        return customerID;
+    }
+    
+    public String getRentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        String time = sdf.format(rentDate.getTime());
+        return time;
+    }
+    
+    private void setReturnDate(int noDays) {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(rentDate);
+        calendar.add(Calendar.DATE, noDays);
+        returnDate = calendar.getTime();
+    }
+    
+    public String getReturnDate() {
+        if (returnDate != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            String time = sdf.format(returnDate.getTime());
+            return time;
+        }
+        else {
+            return "N/A";
+        }
+    }
+
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+    
+    public void returnDVD() {
+        this.status = Status.RETURNED;
+        this.returnDate = new Date();
+    }
 }
