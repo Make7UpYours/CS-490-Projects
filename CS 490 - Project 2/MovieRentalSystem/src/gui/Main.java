@@ -7,8 +7,10 @@ package gui;
 
 import business_logic.Controller;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 import movierentalsystem.*;
 
 /**
@@ -56,45 +58,126 @@ public class Main {
         movie2.addDVD("3");
         movie2.addDVD("4");
         movie3.addDVD("5");
+        movie3.addDVD("6");
+        if(controller.removeDVD("6")){
+            System.out.println("Successfully removed DVD: 6");
+            System.out.println();
+        }
         
         // Add Customers to system
-        controller.addCustomer("1", "example@example.com", "742 Ames", "6362094213", "password", "Dan Stucky");      
+        controller.addCustomer("1", "example@example.com", "742 Ames", "6362094213", "password", "Dan Stucky");
+        controller.addCustomer("2", "wjfkc2@mail.umkc.edu", "1234 St.", "987654321", "cheese", "William Freeman");
         Customer dan = controller.findCustomerByID("1");
+        if(controller.removeCustomer("2")){
+            System.out.println("Successfully removed customer: William");
+            System.out.println();
+        }
         
         // RENT MOVIE SIMULATION
         System.out.println("Rent DVD Simulation:");
         rentMovieSimulation(controller, dan, "will smith", 2);
         rentMovieSimulation(controller, dan, "Comedy", 2);
         rentMovieSimulation(controller, dan, "Pi", 1);
+        
+        //Movie return sim
+        DVD dvd5 = controller.findDVDByID("5");
+        DVD dvd1 = controller.findDVDByID("1");
+        DVD dvdNone = controller.findDVDByID("6");
+        System.out.println("Return DVD Simulation:");
+        returnMovieSim(controller, dan, dvd5);
+        returnMovieSim(controller, dan, dvdNone);
+        returnMovieSim(controller, dan, dvd1);
+        
+        //Run rental sim again
+        rentMovieSimulation(controller, dan, "Life", 2);
+        
+        //Run late sim
+        returnMovieLateSim(controller, dan, dvd1);
+    }
+    
+    private static void returnMovieLateSim(Controller controller, Customer customer, DVD dvd){
+        Date returnDay = new Date();
+        returnDay.setTime(new Date().getTime() + 864000000); // 10 days late, time in milliseconds
+        if(dvd != null){
+            LinkedList<Rental> rentals = customer.getRentals();
+            for(Rental rental : rentals){
+               if(rental.getDVDSerialNo() == dvd.getSerialNo()){
+                    if(controller.returnMovie(dvd, rental, returnDay)){
+                        System.out.println("Successful return.");
+                        System.out.println("DVD Serial No: " + rental.getDVDSerialNo() +
+                               "\tRental Status: " + rental.getStatus());
+                        if(rental.getStatus() == Rental.Status.LATE){
+                            System.out.println("DVD is late, calculating late fees");
+                            //10 cents a day after a week
+                            double lateFee = ((rental.calculateRentalLength(TimeUnit.HOURS) - 168) / 24) * .10;
+                            System.out.println("You owe $" + lateFee);
+                        }
+                        System.out.println();
+                        return;
+                    }
+               }
+           }
+           System.out.println("No rental found for Customer: " 
+                   + customer.getName());
+           System.out.println("DVD Serial No: " + dvd.getSerialNo());
+        }
+        else{
+            System.out.println("Invalid dvd returned.");
+        }
+        System.out.println();
+    }
+    
+    private static void returnMovieSim(Controller controller, Customer customer, DVD dvd){
+        if(dvd != null){
+            LinkedList<Rental> rentals = customer.getRentals();
+            for(Rental rental : rentals){
+               if(rental.getDVDSerialNo() == dvd.getSerialNo()){
+                    if(controller.returnMovie(dvd, rental, new Date())){
+                        System.out.println("Successful return.");
+                        System.out.println("DVD Serial No: " + rental.getDVDSerialNo() +
+                               "\tRental Status: " + rental.getStatus());
+                        System.out.println();
+                        return;
+                    }
+               }
+           }
+           System.out.println("No rental found for Customer: " 
+                   + customer.getName());
+           System.out.println("DVD Serial No: " + dvd.getSerialNo());
+        }
+        else{
+            System.out.println("Invalid dvd returned.");
+        }
+        System.out.println();
     }
     
     private static void rentMovieSimulation(Controller controller, Customer customer, String searchText, double payAmount) {      
-            // Customer searches movies based on any criteria
-            Iterator<Movie> itr = controller.findMovies(searchText);
-            // Just use first movie returned for this example
-            Movie myMovie = itr.next();
-            System.out.println(customer.getName() + " wants to rent " + myMovie.getName());
-            // Customer selects a movie and system checks if it is available.
-            DVD dvd = controller.getAvailableDVD(myMovie);
-            if (dvd != null) {
-                // Complete rental after payment successfully received
-                if (controller.makePayment(payAmount)) {
-                    controller.rentMovie(dvd, customer);
-                    // Show rentals for proof it was added here
-                    System.out.println("Successful rental. Updated rentals for " + customer.getName() + ":");
-                    LinkedList<Rental> rentals = customer.getRentals();
-                    for (Rental rental : rentals) {
-                        System.out.println("DVD Serial No: " + rental.getDVDSerialNo() + 
-                                "\tRental Status: " + rental.getStatus());
-                    }
-                }
-                else {
-                    System.out.println("Invalid payment. Rental Cancelled.");
+        // Customer searches movies based on any criteria
+        Iterator<Movie> itr = controller.findMovies(searchText);
+        // Just use first movie returned for this example
+        Movie myMovie = itr.next();
+        System.out.println(customer.getName() + " wants to rent " + myMovie.getName());
+        // Customer selects a movie and system checks if it is available.
+        DVD dvd = controller.getAvailableDVD(myMovie);
+        if (dvd != null) {
+            // Complete rental after payment successfully received
+            if (controller.makePayment(payAmount)) {
+                controller.rentMovie(dvd, customer);
+                // Show rentals for proof it was added here
+                System.out.println("Successful rental. Updated rentals for " + customer.getName() + ":");
+                LinkedList<Rental> rentals = customer.getRentals();
+                for (Rental rental : rentals) {
+                    System.out.println("DVD Serial No: " + rental.getDVDSerialNo() + 
+                            "\tRental Status: " + rental.getStatus());
                 }
             }
             else {
-                System.out.println("No dvd available for that movie.");
+                System.out.println("Invalid payment. Rental Cancelled.");
             }
-            System.out.println();
         }
+        else {
+            System.out.println("No dvd available for that movie.");
+        }
+        System.out.println();
+    }
 }

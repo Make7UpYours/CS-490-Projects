@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -16,7 +17,7 @@ import java.util.GregorianCalendar;
  */
 public class Rental {
     public final int ONE_WEEK = 7;
-    public enum Status{ RETURNED, RENTED };
+    public enum Status{ RETURNED, RENTED, LATE };
     private Date rentDate;
     private Date returnDate;
     private Status status;
@@ -43,6 +44,12 @@ public class Rental {
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         String time = sdf.format(rentDate.getTime());
         return time;
+    }
+    
+    //Code obtained from http://stackoverflow.com/questions/1555262/calculating-the-difference-between-two-java-date-instances
+    public long calculateRentalLength(TimeUnit timeUnit){
+        long diffInMillies = returnDate.getTime() - rentDate.getTime();
+        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
     
     private void setReturnDate() {
@@ -72,6 +79,12 @@ public class Rental {
     }
     
     public void returnDVD() {
-        this.status = Status.RETURNED;
+        //168 hours in a week
+        if(this.calculateRentalLength(TimeUnit.HOURS) > 168){
+            this.status = Status.LATE;
+        }
+        else{
+            this.status = Status.RETURNED;
+        }
     }
 }

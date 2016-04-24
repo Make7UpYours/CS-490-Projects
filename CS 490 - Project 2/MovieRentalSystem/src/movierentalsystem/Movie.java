@@ -51,6 +51,25 @@ public class Movie implements Searchable {
         return null;
     }
     
+    public DVD findDVD(String serialNo){
+        for(DVD dvd : dvds){
+            if(dvd.getSerialNo() == serialNo){
+                return dvd;
+            }
+        }
+        return null;
+    }
+    
+    public boolean removeDVD(String serialNo){
+        for(DVD dvd : dvds){
+            if(dvd.getSerialNo() == serialNo){
+                dvds.remove(dvd);
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public Rating getRating() {
         return rating;
     }
